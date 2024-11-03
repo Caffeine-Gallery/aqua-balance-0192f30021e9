@@ -5,7 +5,12 @@ import type { IDL } from '@dfinity/candid';
 export interface _SERVICE {
   'pourWater' : ActorMethod<
     [number],
-    { 'weight' : number, 'targetWeight' : number, 'isWin' : boolean }
+    {
+      'weight' : number,
+      'gameActive' : boolean,
+      'targetWeight' : number,
+      'isWin' : boolean,
+    }
   >,
   'resetGame' : ActorMethod<[], undefined>,
   'startNewGame' : ActorMethod<[], number>,

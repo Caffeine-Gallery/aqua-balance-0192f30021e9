@@ -2,6 +2,9 @@ import { backend } from "declarations/backend";
 
 let isPouring = false;
 let gameActive = false;
+let pourInterval = null;
+let startPourTime = null;
+let animationFrameId = null;
 
 const pitcher = document.getElementById('pitcher');
 const waterStream = document.getElementById('water-stream');
@@ -31,36 +34,73 @@ async function startNewGame() {
     }
 }
 
-async function pourWater() {
-    if (!gameActive || isPouring) return;
-    
-    isPouring = true;
-    waterStream.style.height = '150px';
-    
+function calculatePourRate(elapsedTime) {
+    // Start with base rate and increase exponentially
+    const baseRate = 0.05;
+    const maxRate = 0.5;
+    const accelerationFactor = 1.005;
+    return Math.min(baseRate * Math.pow(accelerationFactor, elapsedTime), maxRate);
+}
+
+async function updateWater() {
+    if (!gameActive || !isPouring) return;
+
+    const elapsedTime = Date.now() - startPourTime;
+    const pourAmount = calculatePourRate(elapsedTime);
+
     try {
-        const result = await backend.pourWater(0.1);
+        const result = await backend.pourWater(pourAmount);
         currentWeightDisplay.textContent = `Current Weight: ${result.weight.toFixed(2)}`;
         water.style.height = `${(result.weight / result.targetWeight) * 100}%`;
         
         if (result.isWin) {
-            gameActive = false;
+            stopPouring();
             message.className = 'message success';
             message.textContent = 'Congratulations! You hit the target weight!';
-        } else if (result.weight > result.targetWeight + 0.1) {
             gameActive = false;
+        } else if (!result.gameActive) {
+            stopPouring();
             message.className = 'message error';
             message.textContent = 'Too much water! Game Over!';
+            gameActive = false;
+        } else {
+            animationFrameId = requestAnimationFrame(updateWater);
         }
     } catch (error) {
+        stopPouring();
         message.className = 'message error';
         message.textContent = 'Error updating game';
-    } finally {
-        setTimeout(() => {
-            waterStream.style.height = '0';
-            isPouring = false;
-        }, 300);
+    }
+}
+
+function startPouring() {
+    if (!gameActive || isPouring) return;
+    isPouring = true;
+    startPourTime = Date.now();
+    waterStream.style.height = '150px';
+    waterStream.style.opacity = '1';
+    updateWater();
+}
+
+function stopPouring() {
+    isPouring = false;
+    waterStream.style.height = '0';
+    waterStream.style.opacity = '0';
+    if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
     }
 }
 
 startButton.addEventListener('click', startNewGame);
-pitcher.addEventListener('click', pourWater);
+pitcher.addEventListener('mousedown', startPouring);
+pitcher.addEventListener('mouseup', stopPouring);
+pitcher.addEventListener('mouseleave', stopPouring);
+pitcher.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startPouring();
+});
+pitcher.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    stopPouring();
+});

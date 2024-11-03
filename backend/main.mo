@@ -21,17 +21,19 @@ actor {
     targetWeight
   };
 
-  // Pour water and check win condition
+  // Pour water with variable amount and check win condition
   public func pourWater(amount : Float) : async {
     weight : Float;
     isWin : Bool;
     targetWeight : Float;
+    gameActive : Bool;
   } {
     if (not isGameActive) {
       return {
         weight = currentWeight;
         isWin = false;
         targetWeight = targetWeight;
+        gameActive = false;
       };
     };
 
@@ -39,7 +41,7 @@ actor {
     
     // Check win condition (within 0.1 of target)
     let isWin = Float.abs(currentWeight - targetWeight) < 0.1;
-    if (isWin) {
+    if (isWin or currentWeight > targetWeight + 0.1) {
       isGameActive := false;
     };
 
@@ -47,6 +49,7 @@ actor {
       weight = currentWeight;
       isWin = isWin;
       targetWeight = targetWeight;
+      gameActive = isGameActive;
     }
   };
 

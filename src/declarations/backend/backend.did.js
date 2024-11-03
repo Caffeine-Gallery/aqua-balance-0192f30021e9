@@ -5,6 +5,7 @@ export const idlFactory = ({ IDL }) => {
         [
           IDL.Record({
             'weight' : IDL.Float64,
+            'gameActive' : IDL.Bool,
             'targetWeight' : IDL.Float64,
             'isWin' : IDL.Bool,
           }),

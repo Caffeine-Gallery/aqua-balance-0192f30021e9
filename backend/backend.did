@@ -1,6 +1,7 @@
 service : {
   pourWater: (float64) ->
    (record {
+      gameActive: bool;
       isWin: bool;
       targetWeight: float64;
       weight: float64;
