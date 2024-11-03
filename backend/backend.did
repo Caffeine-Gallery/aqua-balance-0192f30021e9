@@ -1,0 +1,10 @@
+service : {
+  pourWater: (float64) ->
+   (record {
+      isWin: bool;
+      targetWeight: float64;
+      weight: float64;
+    });
+  resetGame: () -> ();
+  startNewGame: () -> (float64);
+}

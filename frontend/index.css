@@ -1,0 +1,152 @@
+.dark-theme {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --primary-color: #3498db;
+    --secondary-color: #2980b9;
+    --accent-color: #e74c3c;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+    text-align: center;
+}
+
+.game-container {
+    position: relative;
+    height: 400px;
+    margin: 2rem 0;
+}
+
+.pitcher {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.pitcher:hover {
+    transform: translateX(-50%) scale(1.1);
+}
+
+.pitcher svg {
+    width: 100%;
+    height: 100%;
+    color: var(--primary-color);
+}
+
+.water-stream {
+    position: absolute;
+    top: 150px;
+    left: 50%;
+    width: 10px;
+    height: 0;
+    background: var(--primary-color);
+    transform-origin: top;
+    transition: height 0.3s;
+}
+
+.cup {
+    position: absolute;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 100px;
+    border: 4px solid var(--text-color);
+    border-radius: 0 0 10px 10px;
+    overflow: hidden;
+}
+
+.water {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0;
+    background: var(--primary-color);
+    transition: height 0.3s;
+}
+
+.scale-base {
+    position: absolute;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 200px;
+    height: 20px;
+    background: var(--secondary-color);
+    border-radius: 10px;
+}
+
+.btn {
+    background: var(--primary-color);
+    color: var(--text-color);
+    border: none;
+    padding: 0.8rem 1.5rem;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem auto;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background: var(--secondary-color);
+}
+
+.message {
+    margin-top: 1rem;
+    padding: 1rem;
+    border-radius: 5px;
+}
+
+.message.success {
+    background: #27ae60;
+}
+
+.message.error {
+    background: var(--accent-color);
+}
+
+.loading {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    padding: 2rem;
+    border-radius: 10px;
+    z-index: 1000;
+}
+
+.loading svg {
+    animation: spin 1s linear infinite;
+    width: 48px;
+    height: 48px;
+    color: var(--primary-color);
+}
+
+.hidden {
+    display: none;
+}
+
+@keyframes spin {
+    100% {
+        transform: rotate(360deg);
+    }
+}
